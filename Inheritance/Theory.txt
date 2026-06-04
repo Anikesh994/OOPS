@@ -1,3 +1,9 @@
+
+
+
+
+
+
 Alright — let’s do **Inheritance in OOP** in the same clear, structured, analogy-based way.
 
 ---
