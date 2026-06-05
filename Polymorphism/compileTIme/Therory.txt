@@ -1,0 +1,823 @@
+# Polymorphism in C++ (OOP) — Complete Teacher-Style Explanation
+
+Imagine you're in a classroom and I tell you:
+
+> "One thing can behave in many different ways depending on the situation."
+
+That single sentence is the heart of **Polymorphism**.
+
+The word **Polymorphism** comes from:
+
+* **Poly** = Many
+* **Morph** = Forms
+
+So:
+
+> **Polymorphism means "many forms."**
+
+In C++ OOP, polymorphism allows the **same interface (function name)** to perform **different actions**.
+
+---
+
+# Real-Life Analogy: The Person Example
+
+Think of one person named Rahul.
+
+* At home → Rahul is a son.
+* At school → Rahul is a student.
+* At work → Rahul is an employee.
+
+The person is the same, but the behavior changes based on context.
+
+This is exactly what polymorphism does.
+
+---
+
+# Why Do We Need Polymorphism?
+
+Without polymorphism:
+
+```cpp
+dogSound();
+catSound();
+cowSound();
+```
+
+With polymorphism:
+
+```cpp
+animal.sound();
+```
+
+Each animal gives its own sound.
+
+This makes code:
+
+* Reusable
+* Flexible
+* Easy to maintain
+* Extensible
+
+---
+
+# Types of Polymorphism in C++
+
+There are two major types:
+
+```
+Polymorphism
+│
+├── Compile Time Polymorphism
+│      ├── Function Overloading
+│      └── Operator Overloading
+│
+└── Run Time Polymorphism
+       └── Function Overriding (Virtual Functions)
+```
+
+---
+
+# 1. Compile-Time Polymorphism
+
+Also called:
+
+* Static Polymorphism
+* Early Binding
+
+The compiler decides which function to call before the program runs.
+
+---
+
+# A. Function Overloading
+
+Same function name but different parameters.
+
+## Syntax
+
+```cpp
+returnType functionName(parameters);
+```
+
+Multiple versions:
+
+```cpp
+returnType functionName(param1);
+returnType functionName(param1, param2);
+```
+
+---
+
+## Example
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Calculator {
+public:
+
+    int add(int a, int b) {
+        return a + b;
+    }
+
+    int add(int a, int b, int c) {
+        return a + b + c;
+    }
+
+    double add(double a, double b) {
+        return a + b;
+    }
+};
+
+int main() {
+
+    Calculator c;
+
+    cout << c.add(2,3) << endl;
+    cout << c.add(2,3,4) << endl;
+    cout << c.add(2.5,3.5) << endl;
+
+    return 0;
+}
+```
+
+### Output
+
+```cpp
+5
+9
+6
+```
+
+---
+
+## Real-Life Analogy
+
+Think of your phone's camera.
+
+Same button:
+
+```text
+Photo mode
+Video mode
+Portrait mode
+```
+
+Button name is same.
+
+Behavior changes based on input.
+
+That's function overloading.
+
+---
+
+# Rules of Function Overloading
+
+Valid:
+
+```cpp
+show(int);
+show(double);
+show(int, int);
+```
+
+Invalid:
+
+```cpp
+int show(int);
+double show(int);
+```
+
+Because only return type differs.
+
+Compiler gets confused.
+
+---
+
+# B. Operator Overloading
+
+Allows operators to work differently for user-defined objects.
+
+Example:
+
+Normally:
+
+```cpp
+5 + 10
+```
+
+works for integers.
+
+But can we do:
+
+```cpp
+obj1 + obj2
+```
+
+Yes.
+
+Using operator overloading.
+
+---
+
+## Syntax
+
+```cpp
+returnType operator symbol(parameters)
+{
+}
+```
+
+Example:
+
+```cpp
+Complex operator + (Complex obj)
+{
+}
+```
+
+---
+
+## Example
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Complex {
+
+public:
+
+    int real;
+    int imag;
+
+    Complex(int r, int i)
+    {
+        real = r;
+        imag = i;
+    }
+
+    Complex operator +(Complex c)
+    {
+        return Complex(
+            real + c.real,
+            imag + c.imag
+        );
+    }
+};
+
+int main()
+{
+    Complex c1(2,3);
+    Complex c2(4,5);
+
+    Complex c3 = c1 + c2;
+
+    cout << c3.real << " "
+         << c3.imag;
+
+    return 0;
+}
+```
+
+### Output
+
+```cpp
+6 8
+```
+
+---
+
+## Real-Life Analogy
+
+Suppose:
+
+```text
+Money Wallet1 = ₹500
+Money Wallet2 = ₹300
+```
+
+When we do:
+
+```text
+Wallet1 + Wallet2
+```
+
+we expect:
+
+```text
+₹800
+```
+
+Operator overloading teaches C++ how to perform that operation.
+
+---
+
+# 2. Run-Time Polymorphism
+
+Also called:
+
+* Dynamic Polymorphism
+* Late Binding
+
+Decision happens while the program is running.
+
+This is achieved using:
+
+```cpp
+Virtual Functions
+```
+
+and
+
+```cpp
+Function Overriding
+```
+
+---
+
+# Function Overriding
+
+Derived class provides its own implementation of a function already present in the base class.
+
+---
+
+## Syntax
+
+```cpp
+class Base {
+public:
+    virtual void show();
+};
+
+class Derived : public Base {
+public:
+    void show() override;
+};
+```
+
+---
+
+# Example Without Virtual
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Animal {
+public:
+    void sound()
+    {
+        cout << "Animal Sound\n";
+    }
+};
+
+class Dog : public Animal {
+public:
+    void sound()
+    {
+        cout << "Bark\n";
+    }
+};
+
+int main()
+{
+    Animal* ptr;
+
+    Dog d;
+
+    ptr = &d;
+
+    ptr->sound();
+}
+```
+
+### Output
+
+```cpp
+Animal Sound
+```
+
+Why?
+
+Because compiler looks at pointer type:
+
+```cpp
+Animal*
+```
+
+not actual object.
+
+---
+
+# Virtual Function
+
+A virtual function tells C++:
+
+> "Don't decide now. Decide at runtime."
+
+---
+
+## Syntax
+
+```cpp
+virtual void functionName();
+```
+
+---
+
+## Example
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Animal {
+
+public:
+
+    virtual void sound()
+    {
+        cout << "Animal Sound\n";
+    }
+};
+
+class Dog : public Animal {
+
+public:
+
+    void sound() override
+    {
+        cout << "Bark\n";
+    }
+};
+
+int main()
+{
+    Animal* ptr;
+
+    Dog d;
+
+    ptr = &d;
+
+    ptr->sound();
+}
+```
+
+### Output
+
+```cpp
+Bark
+```
+
+Now runtime chooses the correct function.
+
+---
+
+# Real-Life Analogy of Virtual Functions
+
+Imagine a remote control.
+
+```text
+Remote -> Turn On
+```
+
+Connected to:
+
+```text
+TV → turns TV on
+AC → turns AC on
+Speaker → turns speaker on
+```
+
+Same button.
+
+Different behavior.
+
+Runtime decides based on actual device.
+
+That's runtime polymorphism.
+
+---
+
+# How Runtime Polymorphism Works Internally
+
+Behind the scenes C++ creates:
+
+### vtable (Virtual Table)
+
+A table storing addresses of virtual functions.
+
+Example:
+
+```text
+Animal vtable
+--------------
+sound()
+```
+
+Dog:
+
+```text
+Dog vtable
+--------------
+sound() -> Dog version
+```
+
+Object stores a hidden pointer:
+
+```text
+vptr
+```
+
+pointing to its vtable.
+
+When:
+
+```cpp
+ptr->sound();
+```
+
+C++ checks vtable and calls correct function.
+
+---
+
+# Virtual Destructor
+
+Very important in polymorphism.
+
+Without virtual destructor:
+
+```cpp
+delete basePtr;
+```
+
+may not call derived destructor.
+
+---
+
+## Syntax
+
+```cpp
+virtual ~Base()
+{
+}
+```
+
+---
+
+## Example
+
+```cpp
+class Base {
+
+public:
+
+    virtual ~Base()
+    {
+        cout<<"Base Destroyed\n";
+    }
+};
+
+class Derived : public Base {
+
+public:
+
+    ~Derived()
+    {
+        cout<<"Derived Destroyed\n";
+    }
+};
+```
+
+---
+
+# Pure Virtual Function
+
+A function with no implementation.
+
+---
+
+## Syntax
+
+```cpp
+virtual void show() = 0;
+```
+
+The `= 0` makes it pure virtual.
+
+---
+
+# Abstract Class
+
+A class containing at least one pure virtual function.
+
+---
+
+## Example
+
+```cpp
+class Shape {
+
+public:
+
+    virtual void draw() = 0;
+};
+```
+
+Cannot create object:
+
+```cpp
+Shape s; // ERROR
+```
+
+---
+
+# Derived Class
+
+```cpp
+class Circle : public Shape {
+
+public:
+
+    void draw() override
+    {
+        cout<<"Drawing Circle";
+    }
+};
+```
+
+---
+
+# Real-Life Analogy
+
+Think of:
+
+```text
+Vehicle
+```
+
+It defines:
+
+```text
+Start()
+```
+
+But doesn't specify how.
+
+Every vehicle:
+
+* Car
+* Bike
+* Truck
+
+implements its own start behavior.
+
+So Vehicle acts as an abstract blueprint.
+
+---
+
+# Compile-Time vs Run-Time Polymorphism
+
+| Feature          | Compile-Time       | Run-Time         |
+| ---------------- | ------------------ | ---------------- |
+| Decision         | During compilation | During execution |
+| Speed            | Faster             | Slightly slower  |
+| Binding          | Early              | Late             |
+| Uses             | Overloading        | Overriding       |
+| Virtual Function | No                 | Yes              |
+| Flexibility      | Less               | More             |
+
+---
+
+# Interview Questions
+
+### Q1: What is polymorphism?
+
+Ability of one interface to take multiple forms.
+
+---
+
+### Q2: Types?
+
+1. Compile-time
+2. Run-time
+
+---
+
+### Q3: Difference between overloading and overriding?
+
+| Overloading             | Overriding           |
+| ----------------------- | -------------------- |
+| Same class              | Different classes    |
+| Different parameters    | Same parameters      |
+| Compile-time            | Run-time             |
+| No inheritance required | Inheritance required |
+
+---
+
+### Q4: Why use virtual functions?
+
+To achieve runtime polymorphism.
+
+---
+
+### Q5: What is an abstract class?
+
+A class containing at least one pure virtual function.
+
+---
+
+# Complete OOP Picture
+
+Polymorphism is one pillar of OOP. The four pillars are:
+
+### 1. Encapsulation
+
+```cpp
+class Student {
+private:
+    int marks;
+};
+```
+
+Data hiding.
+
+---
+
+### 2. Abstraction
+
+```cpp
+virtual void draw() = 0;
+```
+
+Hide implementation details.
+
+---
+
+### 3. Inheritance
+
+```cpp
+class Dog : public Animal
+{
+};
+```
+
+Acquire properties from parent.
+
+---
+
+### 4. Polymorphism
+
+```cpp
+Animal* ptr = new Dog();
+ptr->sound();
+```
+
+Same interface, multiple behaviors.
+
+---
+
+# One Final Master Analogy
+
+Imagine a company.
+
+Base class:
+
+```text
+Employee
+```
+
+Derived classes:
+
+```text
+Manager
+Developer
+Designer
+```
+
+Each has:
+
+```cpp
+work()
+```
+
+When called:
+
+```cpp
+Employee* emp;
+```
+
+* Manager → manages team
+* Developer → writes code
+* Designer → creates UI
+
+Same function:
+
+```cpp
+work()
+```
+
+Different behaviors.
+
+That is the essence of **Polymorphism**: **"One interface, many implementations."**
