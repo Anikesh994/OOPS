@@ -1,0 +1,212 @@
+# Runtime Polymorphism in C++ — Quick Revision Notes
+
+## Definition
+
+**Runtime Polymorphism** means:
+
+> The function to be executed is decided during program execution (runtime), not during compilation.
+
+Also called:
+
+* Dynamic Polymorphism
+* Late Binding
+* Dynamic Binding
+
+---
+
+## Requirements
+
+Runtime polymorphism needs:
+
+1. **Inheritance**
+2. **Function Overriding**
+3. **Virtual Function**
+4. **Base Class Pointer or Reference**
+
+Formula:
+
+```text
+Runtime Polymorphism
+=
+Inheritance
++
+Overriding
++
+virtual
++
+Base Class Pointer/Reference
+```
+
+---
+
+## Basic Syntax
+
+```cpp
+class Base {
+public:
+    virtual void show() {
+        cout << "Base";
+    }
+};
+
+class Derived : public Base {
+public:
+    void show() override {
+        cout << "Derived";
+    }
+};
+```
+
+---
+
+## Example
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Animal {
+public:
+    virtual void sound() {
+        cout << "Animal Sound\n";
+    }
+};
+
+class Dog : public Animal {
+public:
+    void sound() override {
+        cout << "Bark\n";
+    }
+};
+
+int main() {
+    Animal* ptr;
+
+    Dog d;
+
+    ptr = &d;
+
+    ptr->sound();
+}
+```
+
+### Output
+
+```text
+Bark
+```
+
+---
+
+## Why `virtual`?
+
+Without `virtual`:
+
+```cpp
+ptr->sound();
+```
+
+calls:
+
+```cpp
+Animal::sound()
+```
+
+With `virtual`:
+
+```cpp
+ptr->sound();
+```
+
+calls:
+
+```cpp
+Dog::sound()
+```
+
+based on the actual object type.
+
+---
+
+## Real-Life Analogy
+
+### Remote Control
+
+```text
+Remote → Power()
+```
+
+Connected to:
+
+* TV → TV turns ON
+* AC → AC turns ON
+* Speaker → Speaker turns ON
+
+Same interface (`Power()`), different behavior.
+
+This is runtime polymorphism.
+
+---
+
+## Pure Virtual Function
+
+```cpp
+virtual void sound() = 0;
+```
+
+* Has no implementation in the base class.
+* Forces derived classes to implement it.
+
+---
+
+## Abstract Class
+
+```cpp
+class Animal {
+public:
+    virtual void sound() = 0;
+};
+```
+
+Cannot create objects:
+
+```cpp
+Animal a;   // ❌ Error
+```
+
+---
+
+## Virtual Destructor
+
+Always use a virtual destructor in polymorphic base classes:
+
+```cpp
+virtual ~Animal() {}
+```
+
+This ensures derived destructors are called correctly when deleting through a base pointer.
+
+---
+
+## Interview One-Liner
+
+> Runtime polymorphism allows a base-class pointer/reference to call the overridden function of a derived class at runtime using virtual functions.
+
+---
+
+## 10-Second Memory Trick
+
+```text
+virtual + overriding + inheritance + base pointer
+=
+Runtime Polymorphism
+```
+
+Example:
+
+```cpp
+Animal* ptr = new Dog();
+ptr->sound();   // Dog::sound()
+```
+
+That's the core idea you should remember. 🚀
